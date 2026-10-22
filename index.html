@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>PDF Werkstatt</title>
 <meta name="description" content="PDFs ansehen, markieren, anmerken und Seiten ordnen – auch offline.">
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
@@ -46,6 +46,11 @@
   <symbol id="i-all" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 12l3 3 5-6"/></symbol>
   <symbol id="i-edit" viewBox="0 0 24 24"><path d="M15.5 4.5l4 4L8 20H4v-4z"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></symbol>
+  <symbol id="i-sig" viewBox="0 0 24 24"><path d="M3 17c2.5 0 3.5-9 6-9s0 8 2.5 8 2.5-4 4.5-4 1.5 3 4.5 3"/><path d="M3 21h18"/></symbol>
+  <symbol id="i-scan" viewBox="0 0 24 24"><path d="M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4"/><path d="M4 12h16"/></symbol>
+  <symbol id="i-merge" viewBox="0 0 24 24"><path d="M5 3h6v8H5zM13 13h6v8h-6z"/><path d="M8 11v5h5M16 13V8h-5"/></symbol>
+  <symbol id="i-split" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M9 12h6M9 16h6"/><path d="M3 9h3M18 9h3"/></symbol>
+  <symbol id="i-form" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M7 9h4M7 14h10"/><path d="M14 7.5l1.5 1.5 3-3"/></symbol>
   <symbol id="i-goto" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
 </svg>
 
@@ -68,18 +73,19 @@
           <div class="tb-mark" aria-hidden="true">PDF</div>
           <div>
             <h1>PDF Werkstatt</h1>
-            <p>Ansehen, markieren, anmerken und Seiten ordnen. Läuft auch ohne Internet.</p>
+            <p>Ansehen, markieren, scannen, ausfüllen und unterschreiben. Läuft auch ohne Internet.</p>
           </div>
         </div>
         <div class="tb-actions">
           <button id="btnOpenStart" class="btn primary" type="button">PDF öffnen</button>
+          <button id="btnScanStart" class="btn" type="button">Dokument scannen</button>
           <button id="btnSample" class="btn" type="button">Beispiel ansehen</button>
         </div>
         <div id="resumeBox" class="tb-resume" hidden>
           <span class="tb-label">Zuletzt bearbeitet</span>
           <button id="btnResume" class="btn" type="button"><strong id="resumeName"></strong><span id="resumeMeta" class="tb-label"></span></button>
         </div>
-        <div class="tb-cell"><span class="tb-label">Ausbaustufe</span><span class="tb-value">1 von 4</span></div>
+        <div class="tb-cell"><span class="tb-label">Ausbaustufe</span><span class="tb-value">2 von 4</span></div>
         <div class="tb-cell"><span class="tb-label">Stand</span><span class="tb-value" id="buildDate"></span></div>
         <div id="installHint" class="tb-hint" hidden>Für den Offline-Betrieb in Safari auf <b>Teilen</b> und dann <b>Zum Home-Bildschirm</b> tippen. Danach die App über das neue Symbol starten.</div>
         <div id="artifactHint" class="tb-hint" hidden>Testversion: Diese Vorschau braucht Internet. Offline läuft die App erst nach der Einrichtung auf GitHub.</div>
@@ -97,7 +103,9 @@
     </div>
     <div id="selBar" class="float" hidden>
       <button id="selEdit" class="mbtn" type="button"><svg><use href="#i-edit"/></svg>Bearbeiten</button>
-      <button id="selColor" class="mbtn" type="button">Farbe übernehmen</button>
+      <button id="selSmaller" class="mbtn" type="button" aria-label="Kleiner" title="Kleiner" hidden><svg><use href="#i-minus"/></svg></button>
+      <button id="selBigger" class="mbtn" type="button" aria-label="Größer" title="Größer" hidden><svg><use href="#i-plus"/></svg></button>
+      <button id="selColor" class="mbtn" type="button">Farbe</button>
       <button id="selDelete" class="mbtn danger" type="button"><svg><use href="#i-trash"/></svg>Löschen</button>
       <button id="selDone" class="mbtn" type="button"><svg><use href="#i-check"/></svg></button>
     </div>
@@ -112,6 +120,8 @@
     <button class="gbtn" id="gDown" type="button"><svg><use href="#i-right"/></svg>Nach hinten</button>
     <button class="gbtn" id="gBlank" type="button"><svg><use href="#i-blank"/></svg>Leere Seite</button>
     <button class="gbtn" id="gPdf" type="button"><svg><use href="#i-addpdf"/></svg>PDF einfügen</button>
+    <button class="gbtn" id="gScan" type="button"><svg><use href="#i-scan"/></svg>Scannen</button>
+    <button class="gbtn" id="gExport" type="button"><svg><use href="#i-split"/></svg>Als PDF</button>
     <button class="gbtn" id="gGoto" type="button"><svg><use href="#i-goto"/></svg>Anzeigen</button>
     <button class="gbtn danger" id="gDel" type="button"><svg><use href="#i-trash"/></svg>Löschen</button>
     <span class="gcount" id="gCount"></span>
@@ -123,15 +133,17 @@
     <button class="tool" type="button" data-tool="ink" aria-pressed="false"><svg><use href="#i-pen"/></svg>Stift</button>
     <button class="tool" type="button" data-tool="text" aria-pressed="false"><svg><use href="#i-text"/></svg>Text</button>
     <button class="tool" type="button" data-tool="note" aria-pressed="false"><svg><use href="#i-note"/></svg>Notiz</button>
+    <button class="tool" type="button" data-tool="sig" aria-pressed="false"><svg><use href="#i-sig"/></svg>Signatur</button>
     <button class="tool" type="button" data-tool="pages" aria-pressed="false"><svg><use href="#i-pages"/></svg>Seiten</button>
   </nav>
 </div>
 
 <input id="fileOpen" type="file" accept="application/pdf,.pdf" hidden>
 <input id="fileInsert" type="file" accept="application/pdf,.pdf" multiple hidden>
+<input id="fileMerge" type="file" accept="application/pdf,.pdf" multiple hidden>
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="busy" hidden><div class="box"><div class="spin"></div><span id="busyText">Bitte warten …</span></div></div>
-<script>window.__PDFW_TARGET="github";window.__PDFW_BUILD="v1.1 \u00b7 22.10.2026";</script>
+<script>window.__PDFW_TARGET="github";window.__PDFW_BUILD="v2.0 \u00b7 22.10.2026";</script>
 <script src="lib/pdf-lib.js"></script>
 <script type="module" src="app.js"></script>
 </body>

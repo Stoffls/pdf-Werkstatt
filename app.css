@@ -621,7 +621,7 @@ button { cursor: pointer; }
 #busy {
   position: fixed;
   inset: 0;
-  z-index: 45; /* unter Dialogen, damit z. B. die Passwortabfrage bedienbar bleibt */
+  z-index: 47; /* über Scan-Ansicht (46), unter Dialogen (50), damit z. B. die Passwortabfrage bedienbar bleibt */
   display: grid;
   place-items: center;
   background: rgb(10 14 18 / 0.3);
@@ -654,3 +654,95 @@ button { cursor: pointer; }
 @media (min-width: 700px) {
   .tool { font-size: 12px; }
 }
+
+/* ---------- form fields ---------- */
+.pg .forms { position: absolute; inset: 0; pointer-events: none; }
+#viewer.mode-read .pg .forms .ffield:not(:disabled) { pointer-events: auto; }
+.ffield {
+  position: absolute;
+  margin: 0;
+  padding: 0 2px;
+  border: 0;
+  border-radius: 0;
+  background: rgb(31 111 235 / 0.10);
+  color: #111;
+  font-family: Helvetica, Arial, sans-serif;
+  line-height: 1.15;
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: 1px solid rgb(31 111 235 / 0.35);
+  outline-offset: -1px;
+}
+textarea.ffield { resize: none; padding-top: 1px; }
+select.ffield { padding: 0 2px; }
+.ffield:focus { background: rgb(31 111 235 / 0.16); outline: 2px solid #1f6feb; }
+.ffield:disabled { background: transparent; outline: 0; color: #111; }
+.fcheck, .fradio { display: grid; place-items: center; cursor: pointer; padding: 0; }
+.fradio { border-radius: 50%; }
+.fcheck[aria-checked="true"]::after { content: "✓"; font-weight: 700; line-height: 1; }
+.fradio[aria-checked="true"]::after { content: ""; width: 45%; height: 45%; border-radius: 50%; background: #111; }
+
+/* ---------- signature ---------- */
+.sigprev { display: flex; align-items: center; height: 34px; padding: 0 8px; border-radius: 8px; background: #fff; border: 1px solid var(--line); flex: none; }
+.sigpad-wrap { display: flex; flex-direction: column; gap: 10px; }
+.sigbox { position: relative; height: 190px; border-radius: 12px; background: #fff; border: 1px solid var(--line); overflow: hidden; }
+.sigline { position: absolute; left: 16px; right: 16px; bottom: 44px; border-top: 1.5px solid #c7ccd3; padding-top: 4px; font-size: 12px; color: #8a929c; pointer-events: none; }
+.sigpad { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
+.sigtools { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ---------- full-screen sheets (scan) ---------- */
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 46;
+  background: var(--bg);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: var(--safe-top) var(--safe-right) 0 var(--safe-left);
+}
+.edit-sheet { grid-template-rows: auto 1fr auto auto; background: var(--desk); }
+.sheet-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.sheet-title { font: 700 16px/1.2 var(--font-display); text-align: center; flex: 1 1 auto; min-width: 0; }
+.sheet-body { overflow: auto; padding: 16px; min-height: 0; }
+.sheet-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 16px calc(var(--safe-bottom) + 12px);
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+.sheet-foot > .btn { flex: 1 1 180px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.sheet-foot .btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.scan-empty { margin: 24px auto; max-width: 34ch; text-align: center; color: var(--muted); }
+.scan-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 16px; }
+.scan-card { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.scan-thumb { border: 0; padding: 0; background: #fff; box-shadow: var(--shadow); line-height: 0; }
+.scan-thumb img { display: block; max-width: 120px; max-height: 160px; }
+.scan-row { display: flex; align-items: center; gap: 2px; font: 12px/1 var(--font-data); color: var(--muted); }
+.scan-row .ib { width: 36px; height: 36px; }
+.scan-row .ib.danger { color: var(--danger); }
+.ed-stage { position: relative; min-height: 0; overflow: hidden; touch-action: none; }
+.ed-stage canvas { position: absolute; display: block; box-shadow: var(--shadow); }
+.ed-stage svg { position: absolute; inset: 0; touch-action: none; }
+.ed-quad { fill: rgb(217 83 11 / 0.14); stroke: #ff7a33; stroke-width: 2; }
+.ed-handle { fill: rgb(255 255 255 / 0.85); stroke: #ff7a33; stroke-width: 3; cursor: grab; }
+.ed-hint { margin: 0; padding: 8px 16px; font-size: 13px; color: var(--ink); background: var(--surface-2); text-align: center; }
+.ed-foot { justify-content: center; }
+.ed-tools { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.ed-tools .toggle svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; flex: none; }
+.seg button { border: 0; background: var(--surface); padding: 8px 14px; font-size: 14px; min-height: 36px; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 700; }
+#viewer.mode-sig .hit { cursor: copy; }
