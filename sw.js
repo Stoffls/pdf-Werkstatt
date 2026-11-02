@@ -1,5 +1,5 @@
 // Offline-Speicher der PDF Werkstatt: alle App-Dateien werden beim ersten Start gesichert.
-const VERSION = 'pdfw-2cf4f2acb222';
+const VERSION = 'pdfw-8c4d7d6243a0';
 const ASSETS = [
  "./",
  "./app.css",
@@ -46,6 +46,7 @@ const ASSETS = [
  "./lib/wasm/quickjs-eval.js",
  "./lib/wasm/quickjs-eval.wasm",
  "./manifest.webmanifest",
+ "./measure.js",
  "./scan.js"
 ];
 

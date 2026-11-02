@@ -746,3 +746,38 @@ select.ffield { padding: 0 2px; }
 .seg button + button { border-left: 1px solid var(--line); }
 .seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 700; }
 #viewer.mode-sig .hit { cursor: copy; }
+
+/* ---------- measuring ---------- */
+#viewer.mode-meas .hit { cursor: crosshair; }
+.toggle.warn { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+.toggle.primary-t { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 700; }
+.toolopts .seg button { padding: 6px 10px; min-height: 32px; font-size: 13px; }
+.loupe {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 44;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--accent);
+  box-shadow: var(--shadow);
+  background: #fff;
+  pointer-events: none;
+}
+.loupe canvas { width: 100%; height: 100%; display: block; }
+.loupe .lx, .loupe .ly { position: absolute; background: rgb(217 33 33 / 0.85); }
+.loupe .lx { left: 50%; top: 22%; bottom: 22%; width: 1.5px; margin-left: -0.75px; }
+.loupe .ly { top: 50%; left: 22%; right: 22%; height: 1.5px; margin-top: -0.75px; }
+.calbox { display: flex; flex-direction: column; gap: 10px; }
+.calinfo { margin: 0; font: 13px/1.4 var(--font-data); color: var(--muted); }
+.calrow { display: flex; align-items: center; gap: 8px; }
+.calrow input { flex: 1 1 auto; min-width: 0; }
+.calpre { font: 700 18px/1 var(--font-data); flex: none; }
+.calres { margin: 0; min-height: 1.4em; font-weight: 600; color: var(--ink); }
+.calhint { margin: 0; font-size: 13px; color: var(--muted); }
+.calbox .toggle { align-self: flex-start; }
+@media (max-width: 430px) {
+  .tool { font-size: 10px; letter-spacing: 0; padding-inline: 0; }
+}
